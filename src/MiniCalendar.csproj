@@ -26,7 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Dark.xaml">
+    <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Skins\Dark.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

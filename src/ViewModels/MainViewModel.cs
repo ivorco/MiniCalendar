@@ -1,45 +1,69 @@
-﻿using MiniCalendar.Data;
+﻿using Caliburn.Micro;
+using MiniCalendar.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Windows;
-using System.Windows.Input;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
-namespace MiniCalendar
+namespace MiniCalendar.ViewModels
 {
-    // TODO: Refresh every x time, with force refresh button
-    // TODO: Dark mode with selector
-    // TODO: Remeber dark mode size and last location
-    // TODO: Highlight upcoming appoinments and current day
-
-    public partial class MainWindow : Window
+    public class MainViewModel : PropertyChangedBase
     {
-        public MainWindow()
-        {
-            InitializeComponent();
+        // TODO: Dark mode with selector
+        // TODO: Remeber dark mode size and last location
+        // TODO: Highlight upcoming appoinments and current day
 
+        public MainViewModel()
+        {
             var timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
-            timer.Elapsed += (s, e) => Application.Current.Dispatcher.Invoke(() => RefreshData());
+#if DEBUG
+            timer.Interval = TimeSpan.FromSeconds(15).TotalMilliseconds;
+#endif
+            timer.Elapsed += (s, e) => RefreshData();
             timer.Start();
 
             RefreshData();
         }
 
-        private void RefreshData()
+        private bool isRefreshing = false;
+        public bool IsRefreshing
         {
-            itemsControl.Items.Clear();
+            get { return isRefreshing; }
+            set
+            {
+                isRefreshing = value;
+                NotifyOfPropertyChange(() => isRefreshing);
+            }
+        }
 
-            var items = GetWeeklyCalendarItems();
-            //MessageBox.Show(string.Join(Environment.NewLine, items.OrderBy(item => item.Start).Select(item => item.Subject)));
+        private Week week = new Week();
+        public Week Week
+        {
+            get { return week; }
+            set
+            {
+                week = value;
+                NotifyOfPropertyChange(() => week);
+            }
+        }
 
-            var week = new Week(items.ToList());
+        async public void RefreshData()
+        {
+            if (!IsRefreshing)
+            {
+                IsRefreshing = true;
 
-            foreach (var day in week)
-                itemsControl.Items.Add(day);
+                await Task.Run(() =>
+                 {
+                     var items = GetWeeklyCalendarItems();
+                     Week = new Week(items.ToList());
+                 });
+
+                IsRefreshing = false;
+            }
         }
 
         public IEnumerable<Appointment> GetWeeklyCalendarItems()
@@ -84,18 +108,6 @@ namespace MiniCalendar
                     yield return Appointment.FromOutlook(item);
                 }
             }
-        }
-
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-                DragMove();
-        }
-
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Escape)
-                Close();
         }
     }
 }

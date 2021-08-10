@@ -1,13 +1,16 @@
 ﻿<Application x:Class="MiniCalendar.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MiniCalendar"
-             StartupUri="MainWindow.xaml">
+             xmlns:local="clr-namespace:MiniCalendar" 
+             xmlns:vm="clr-namespace:MiniCalendar.ViewModels">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="Light.xaml"/>-->
-                <ResourceDictionary Source="Dark.xaml"/>
+                <!--<ResourceDictionary Source="Skins/Light.xaml"/>-->
+                <ResourceDictionary Source="Skins/Dark.xaml"/>
+                <ResourceDictionary>
+                    <vm:MiniCalBootstrapper x:Key="bootstrapper" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

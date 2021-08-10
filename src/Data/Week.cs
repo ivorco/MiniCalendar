@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 
 namespace MiniCalendar.Data
 {
-    public class Week : Dictionary<DateTime, List<Appointment>>
+    public class Week : BindableCollection<Day>
     {
         public Week(List<Appointment> allAppointments = null)
         {
@@ -19,7 +20,7 @@ namespace MiniCalendar.Data
                 else
                     dayAppointments = allAppointments.Where(app => app.Start.Date == day.Date).ToList();
 
-                Add(day, dayAppointments);
+                Add(new Day { Date = day, Appointments = dayAppointments });
             }
         }
     }
