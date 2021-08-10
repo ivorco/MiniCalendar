@@ -9,7 +9,7 @@
         Title="MiniCalendar" Height="220" Width="700" MinHeight="150" MinWidth="300" AllowsTransparency="True" 
         MouseDown="Window_MouseDown" KeyDown="Window_KeyDown" FontSize="14" Foreground="{StaticResource WindowFontColor}">
     <Window.Resources>
-        <local:DivideConverter x:Key="DivideConverter" />
+        <local:ItemsEqualWidthConverter x:Key="ItemsEqualWidthConverter" />
         <local:DateToHebrewDayConverter x:Key="DateToHebrewDayConverter"/>
     </Window.Resources>
     <Border BorderThickness="2,0,2,0">
@@ -21,12 +21,13 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderThickness="2,4,2,4">
+                    <Border BorderThickness="2,4,2,4" x:Name="itemBorder">
                         <StackPanel Orientation="Vertical">
                             <StackPanel.Width>
-                                <MultiBinding Converter="{StaticResource DivideConverter}">
+                                <MultiBinding Converter="{StaticResource ItemsEqualWidthConverter}">
                                     <Binding Path="ActualWidth" ElementName="itemsControl"/>
                                     <Binding Path="Items.Count" ElementName="itemsControl"/>
+                                    <Binding Path="BorderThickness" ElementName="itemBorder"/>
                                 </MultiBinding>
                             </StackPanel.Width>
 

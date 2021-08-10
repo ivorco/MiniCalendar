@@ -10,7 +10,6 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace MiniCalendar
 {
-    // TODO: Hide middle date if wrapping
     // TODO: Refresh every x time, with force refresh button
     // TODO: Dark mode
     // TODO: Highlight upcoming appoinments and current day
