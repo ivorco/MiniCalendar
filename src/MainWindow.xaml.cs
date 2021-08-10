@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using Outlook = Microsoft.Office.Interop.Outlook;
@@ -11,7 +12,8 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 namespace MiniCalendar
 {
     // TODO: Refresh every x time, with force refresh button
-    // TODO: Dark mode
+    // TODO: Dark mode with selector
+    // TODO: Remeber dark mode size and last location
     // TODO: Highlight upcoming appoinments and current day
 
     public partial class MainWindow : Window
@@ -19,6 +21,17 @@ namespace MiniCalendar
         public MainWindow()
         {
             InitializeComponent();
+
+            var timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
+            timer.Elapsed += (s, e) => Application.Current.Dispatcher.Invoke(() => RefreshData());
+            timer.Start();
+
+            RefreshData();
+        }
+
+        private void RefreshData()
+        {
+            itemsControl.Items.Clear();
 
             var items = GetWeeklyCalendarItems();
             //MessageBox.Show(string.Join(Environment.NewLine, items.OrderBy(item => item.Start).Select(item => item.Subject)));
