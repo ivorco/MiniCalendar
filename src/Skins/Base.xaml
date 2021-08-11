@@ -22,7 +22,6 @@
             <Trigger Property="Control.IsMouseOver" Value="True">
                 <Setter Property="Control.Background" Value="{x:Null}" />
                 <Setter Property="Control.BorderBrush" Value="{x:Null}" />
-                <Setter Property="Control.FontWeight" Value="Bold" />
             </Trigger>       
         </Style.Triggers>
     </Style>

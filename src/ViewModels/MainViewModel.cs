@@ -12,9 +12,9 @@ namespace MiniCalendar.ViewModels
 {
     public class MainViewModel : PropertyChangedBase
     {
-        // TODO: Dark mode with selector
-        // TODO: Remeber dark mode size and last location
-        // TODO: Highlight upcoming appoinments and current day
+        // TODO: Dark mode with selector - Remeber dark mode 
+        // TODO: Remeber size and last location
+        // TODO: Highlight upcoming appoinments
 
         public MainViewModel()
         {

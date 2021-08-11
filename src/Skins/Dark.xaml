@@ -8,8 +8,14 @@
     <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ForegroundColor}" />
     <SolidColorBrush x:Key="WindowFontColor" Color="{StaticResource ForegroundColor}" />
 
+    <Color x:Key="HighlightColor">#b8b8b8</Color>
+    <SolidColorBrush x:Key="HighlightBrush" Color="{StaticResource HighlightColor}" />
+    
     <Color x:Key="BackgroundColor">#1a1a1a</Color>
     <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
+
+    <Color x:Key="MediumColor">#262626</Color>
+    <SolidColorBrush x:Key="MediumBrush" Color="{StaticResource MediumColor}" />
 
     <Style TargetType="{x:Type Path}">
         <Setter Property="Fill" Value="{StaticResource ForegroundBrush}"/>
@@ -21,10 +27,16 @@
 
     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Flat}">
         <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+
+        <Style.Triggers>
+            <Trigger Property="Control.IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource HighlightBrush}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="{x:Type Border}">
         <Setter Property="BorderBrush" Value="{StaticResource BackgroundBrush}"/>
-        <Setter Property="Background" Value="#262626"/>
+        <Setter Property="Background" Value="{StaticResource MediumBrush}"/>
     </Style>
 </ResourceDictionary>
