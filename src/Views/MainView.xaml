@@ -9,7 +9,7 @@
         ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" WindowStyle="None"
         Title="MiniCalendar" Height="220" Width="700" MinHeight="150" MinWidth="300" AllowsTransparency="True" 
         MouseDown="Window_MouseDown" KeyDown="Window_KeyDown" FontSize="14" Foreground="{StaticResource WindowFontColor}"
-        Background="{StaticResource BackgroundBrush}">
+        Background="{StaticResource BackgroundBrush}" Closing="Window_Closing">
     <Window.Resources>
         <local:ItemsEqualWidthConverter x:Key="ItemsEqualWidthConverter" />
         <local:DateToHebrewDayConverter x:Key="DateToHebrewDayConverter"/>

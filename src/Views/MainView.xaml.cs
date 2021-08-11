@@ -13,6 +13,30 @@ namespace MiniCalendar.Views
         public MainView()
         {
             InitializeComponent();
+
+            // Load last size and position
+            if (Properties.Settings.Default.LastPosition != System.Drawing.Point.Empty &&
+    Properties.Settings.Default.LastSize != System.Drawing.Size.Empty)
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual;
+
+                Left = Properties.Settings.Default.LastPosition.X;
+                Top = Properties.Settings.Default.LastPosition.Y;
+                Width = Properties.Settings.Default.LastSize.Width;
+                Height = Properties.Settings.Default.LastSize.Height;
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Set and save last size and position
+            Properties.Settings.Default.LastPosition = new System.Drawing.Point((int)Left, (int)Top);
+            Properties.Settings.Default.LastSize = new System.Drawing.Size((int)Width, (int)Height);
+            Properties.Settings.Default.Save();
+
+            // Wait until finished refreshing
+            while (((ViewModels.MainViewModel)DataContext).IsRefreshing)
+                System.Threading.Thread.Sleep(100);
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
