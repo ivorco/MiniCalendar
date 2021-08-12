@@ -127,7 +127,7 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock x:Name="ApptText" TextWrapping="Wrap" Margin="5">                                           
-                                            <Run Text="{Binding Start, StringFormat='{}{0:hh:mm}'}" FontWeight="Bold"/><!-- --><Run Text=" "/><!-- --><Run Text="{Binding Subject}" />
+                                            <Run Text="{Binding Start, StringFormat='{}{0:HH:mm}'}" FontWeight="Bold"/><!-- --><Run Text=" "/><!-- --><Run Text="{Binding Subject}" />
                                             </TextBlock>
 
                                             <DataTemplate.Triggers>
