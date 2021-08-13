@@ -9,10 +9,14 @@ namespace MiniCalendar.Data
 {
     public class Week : BindableCollection<Day>
     {
-        public Week(List<Event> allAppointments = null)
+        public Week(DateTime start, DateTime end, List<Event> allAppointments = null)
         {
-            foreach (var day in Enum.GetValues(typeof(DayOfWeek)).OfType<DayOfWeek>().Select(day => day.GetThisWeekday()))
+            var days = (end - start).TotalDays;
+
+            for (int d = 0; d <= days; d++)
             {
+                var day = start.AddDays(d);
+
                 List<Event> dayAppointments;
 
                 if (allAppointments == null)

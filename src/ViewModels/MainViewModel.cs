@@ -44,7 +44,7 @@ namespace MiniCalendar.ViewModels
             }
         }
 
-        private Week week = new Week();
+        private Week week = new Week(DateTime.Now, DateTime.Now.AddDays(-1));
         public Week Week
         {
             get { return week; }
@@ -64,12 +64,19 @@ namespace MiniCalendar.ViewModels
                 await Task.Run(() =>
                  {
                      var oNamespace = OutlookUtils.GetOutlookNameSpace();
-                     var weekStart = DayOfWeek.Sunday.GetThisWeekday();
-                     var weekEnd = DayOfWeek.Saturday.GetThisWeekday();
+                     DateTime weekStart;
+                     DateTime weekEnd;
+
+                     if (DateTime.Now.DayOfWeek == DayOfWeek.Friday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday)
+                         weekStart = DayOfWeek.Wednesday.GetThisWeekday();
+                     else
+                         weekStart = DayOfWeek.Sunday.GetThisWeekday();
+
+                     weekEnd = weekStart.AddDays(6);
 
                      var apptItems = OutlookUtils.GetCalendarItems(oNamespace, weekStart, weekEnd);
                      var taskItems = OutlookUtils.GetTasksItems(oNamespace, weekStart, weekEnd);
-                     Week = new Week(apptItems.Concat(taskItems).OrderBy(item => item.Start).ToList());
+                     Week = new Week(weekStart, weekEnd, apptItems.Concat(taskItems).OrderBy(item => item.Start).ToList());
                  });
 
                 IsRefreshing = false;
