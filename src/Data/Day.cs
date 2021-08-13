@@ -9,6 +9,6 @@ namespace MiniCalendar.Data
     public struct Day
     {
         public DateTime Date { get; set; }
-        public List<Appointment> Appointments { get; set; }
+        public List<Event> Events { get; set; }
     }
 }

@@ -6,13 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace MiniCalendar
+namespace MiniCalendar.Converters
 {
-    public class DateToHebrewDayConverter : IValueConverter
+    public class IsTodayConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return new CultureInfo("he-IL").DateTimeFormat.GetDayName(((DateTime)value).DayOfWeek);
+            return value is DateTime date && date.Date == DateTime.Now.Date;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

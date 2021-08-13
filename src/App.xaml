@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <!--<ResourceDictionary Source="Skins/Light.xaml"/>-->
                 <ResourceDictionary Source="Skins/Dark.xaml"/>
+                <ResourceDictionary Source="Skins/Base.xaml"/>
                 <ResourceDictionary>
                     <vm:MiniCalBootstrapper x:Key="bootstrapper" />
                 </ResourceDictionary>

@@ -5,19 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MiniCalendar"
         xmlns:data="clr-namespace:MiniCalendar.Data"
+        xmlns:conv="clr-namespace:MiniCalendar.Converters"
         mc:Ignorable="d"
         ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" WindowStyle="None"
         Title="MiniCalendar" Height="220" Width="700" MinHeight="150" MinWidth="300" AllowsTransparency="True" 
         MouseDown="Window_MouseDown" KeyDown="Window_KeyDown" FontSize="14" Foreground="{StaticResource WindowFontColor}"
         Background="{StaticResource BackgroundBrush}" Closing="Window_Closing">
     <Window.Resources>
-        <local:ItemsEqualWidthConverter x:Key="ItemsEqualWidthConverter" />
-        <local:DateToHebrewDayConverter x:Key="DateToHebrewDayConverter"/>
-        <local:IsTodayConverter x:Key="IsTodayConverter"/>
+        <conv:ItemsEqualWidthConverter x:Key="ItemsEqualWidthConverter" />
+        <conv:DateToHebrewDayConverter x:Key="DateToHebrewDayConverter"/>
+        <conv:IsTodayConverter x:Key="IsTodayConverter"/>
+        <conv:TimeHasPassedConverter x:Key="TimeHasPassedConverter"/>
     </Window.Resources>
     <DockPanel>
         <Border DockPanel.Dock="Top">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <!--Refresh button-->
                 <Button x:Name="RefreshData">
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
@@ -78,16 +81,17 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type data:Day}">
                         <Border BorderThickness="2,4,2,4" x:Name="itemBorder">
-                            <StackPanel Orientation="Vertical">
-                                <StackPanel.Width>
+                            <DockPanel LastChildFill="True">
+                                <DockPanel.Width>
                                     <MultiBinding Converter="{StaticResource ItemsEqualWidthConverter}">
                                         <Binding Path="ActualWidth" ElementName="Week"/>
                                         <Binding Path="Items.Count" ElementName="Week"/>
                                         <Binding Path="BorderThickness" ElementName="itemBorder"/>
                                     </MultiBinding>
-                                </StackPanel.Width>
+                                </DockPanel.Width>
 
-                                <Border HorizontalAlignment="Stretch" Height="5" Background="{StaticResource HighlightBrush}">
+                                <!--Current day-->
+                                <Border DockPanel.Dock="Top" HorizontalAlignment="Stretch" Height="5" Background="{StaticResource HighlightBrush}">
                                     <Border.Style>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -101,7 +105,8 @@
                                     </Border.Style>
                                 </Border>
 
-                                <DockPanel HorizontalAlignment="Stretch" LastChildFill="True" Margin="5">
+                                <!--Day header-->
+                                <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch" LastChildFill="True" Margin="5">
                                     <Label DockPanel.Dock="Left" Content="{Binding Date.DayOfWeek}" FontWeight="Bold"/>
                                     <Label DockPanel.Dock="Right" Content="{Binding Date, Converter={StaticResource DateToHebrewDayConverter}}" FontWeight="Bold"/>
                                     <TextBlock Text="{Binding Date, StringFormat='{}{0:dd/MM}'}" FontWeight="Bold" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" VerticalAlignment="Center">
@@ -117,14 +122,9 @@
                                     </TextBlock>
                                 </DockPanel>
 
-                                <ItemsControl ItemsSource="{Binding Appointments}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel IsItemsHost="True" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-
-                                    <ItemsControl.ItemTemplate>
+                                <!--Day events-->
+                                <ListBox ItemsSource="{Binding Events}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False" Background="Transparent" BorderThickness="0">
+                                    <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock x:Name="ApptText" TextWrapping="Wrap" Margin="5">                                           
                                             <Run Text="{Binding Start, StringFormat='{}{0:HH:mm}'}" FontWeight="Bold"/><!-- --><Run Text=" "/><!-- --><Run Text="{Binding Subject}" />
@@ -134,11 +134,22 @@
                                                 <DataTrigger Binding="{Binding IsRightToLeft}" Value="true">
                                                     <Setter TargetName="ApptText" Property="FlowDirection" Value="RightToLeft"/>
                                                 </DataTrigger>
+
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Type}" Value="{x:Static data:EventType.Appointment}"/>
+                                                        <Condition Binding="{Binding Start, Converter={StaticResource TimeHasPassedConverter}}" Value="true"/>
+                                                    </MultiDataTrigger.Conditions>
+
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter TargetName="ApptText" Property="Foreground" Value="{StaticResource DimBrush}"/>
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
                                             </DataTemplate.Triggers>
                                         </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </DockPanel>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
