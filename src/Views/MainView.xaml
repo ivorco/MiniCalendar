@@ -125,14 +125,21 @@
                                 <!--Day events-->
                                 <ListBox ItemsSource="{Binding Events}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False" Background="Transparent" BorderThickness="0">
                                     <ListBox.ItemTemplate>
+                                        <!--Event-->
                                         <DataTemplate>
-                                            <TextBlock x:Name="ApptText" TextWrapping="Wrap" Margin="5">                                           
+                                            <Button Click="Event_Click" x:Name="EventText">
+                                                <Button.Template>
+                                                    <ControlTemplate>
+                                                        <TextBlock TextWrapping="Wrap" Margin="5">
                                             <Run Text="{Binding Start, StringFormat='{}{0:HH:mm}'}" FontWeight="Bold"/><!-- --><Run Text=" "/><!-- --><Run Text="{Binding Subject}" />
-                                            </TextBlock>
+                                                        </TextBlock>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>                                            
 
                                             <DataTemplate.Triggers>
                                                 <DataTrigger Binding="{Binding IsRightToLeft}" Value="true">
-                                                    <Setter TargetName="ApptText" Property="FlowDirection" Value="RightToLeft"/>
+                                                    <Setter TargetName="EventText" Property="FlowDirection" Value="RightToLeft"/>
                                                 </DataTrigger>
 
                                                 <MultiDataTrigger>
@@ -142,7 +149,7 @@
                                                     </MultiDataTrigger.Conditions>
 
                                                     <MultiDataTrigger.Setters>
-                                                        <Setter TargetName="ApptText" Property="Foreground" Value="{StaticResource DimBrush}"/>
+                                                        <Setter TargetName="EventText" Property="Foreground" Value="{StaticResource DimBrush}"/>
                                                     </MultiDataTrigger.Setters>
                                                 </MultiDataTrigger>
                                             </DataTemplate.Triggers>

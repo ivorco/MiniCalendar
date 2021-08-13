@@ -70,5 +70,15 @@ namespace MiniCalendar
 
             return outlookTasksItems.OfType<Outlook.TaskItem>().Select(Event.FromOutlook);
         }
+
+        public static void DisplayEvent(string eventId)
+        {
+            var ons = GetOutlookNameSpace();
+            var eventItem = ons.GetItemFromID(eventId);
+            if (eventItem is Outlook.AppointmentItem appt)
+                appt.Display(true);
+            else if (eventItem is Outlook.TaskItem task)
+                task.Display(true);
+        }
     }
 }

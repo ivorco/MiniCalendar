@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 
@@ -35,6 +36,11 @@ namespace MiniCalendar.Views
             Properties.Settings.Default.Save();
 
             // Wait until finished refreshing
+            WaitRefereshing();
+        }
+
+        private void WaitRefereshing()
+        {
             while (((ViewModels.MainViewModel)DataContext).IsRefreshing)
                 System.Threading.Thread.Sleep(100);
         }
@@ -58,6 +64,18 @@ namespace MiniCalendar.Views
 
             if (viewModel.IsRefreshing)
                 storyboard.Begin();
+        }
+
+        private void Event_Click(object sender, RoutedEventArgs e)
+        {
+            WaitRefereshing();
+            ((ViewModels.MainViewModel)DataContext).PauseRefresh = true;
+
+            var eventId = ((Data.Event)((Button)sender).DataContext).ID;
+            OutlookUtils.DisplayEvent(eventId);
+
+            ((ViewModels.MainViewModel)DataContext).PauseRefresh = false;
+            ((ViewModels.MainViewModel)DataContext).Refresh();
         }
     }
 }

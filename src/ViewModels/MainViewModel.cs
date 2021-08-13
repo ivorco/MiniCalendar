@@ -31,6 +31,8 @@ namespace MiniCalendar.ViewModels
             RefreshData();
         }
 
+        public bool PauseRefresh { get; set; } = false;
+
         private bool isRefreshing = false;
         public bool IsRefreshing
         {
@@ -55,7 +57,7 @@ namespace MiniCalendar.ViewModels
 
         async public void RefreshData()
         {
-            if (!IsRefreshing)
+            if (!IsRefreshing && !PauseRefresh)
             {
                 IsRefreshing = true;
 
