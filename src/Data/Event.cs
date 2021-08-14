@@ -19,6 +19,9 @@ namespace MiniCalendar.Data
 
         private static bool IsStringRTL(string theString)
         {
+            if (string.IsNullOrWhiteSpace(theString))
+                return false;
+
             var firstLetter = theString[0].ToString();
 
             var isHeberw = Regex.IsMatch(firstLetter, @"\p{IsHebrew}");

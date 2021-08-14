@@ -9,7 +9,9 @@ namespace MiniCalendar.Data
 {
     public class Week : BindableCollection<Day>
     {
-        public Week(DateTime start, DateTime end, List<Event> allAppointments = null)
+        public Week() { }
+
+        public Week(DateTime start, DateTime end, List<Event> allEvents = null)
         {
             var days = (end - start).TotalDays;
 
@@ -19,13 +21,18 @@ namespace MiniCalendar.Data
 
                 List<Event> dayAppointments;
 
-                if (allAppointments == null)
+                if (allEvents == null)
                     dayAppointments = new List<Event>();
                 else
-                    dayAppointments = allAppointments.Where(app => app.Start.Date == day.Date).ToList();
+                    dayAppointments = allEvents.Where(app => app.Start.Date == day.Date).ToList();
 
                 Add(new Day { Date = day, Events = dayAppointments });
             }
+        }
+
+        public IEnumerable<Event> AllEvents()
+        {
+            return this.SelectMany(day => day.Events);
         }
     }
 }

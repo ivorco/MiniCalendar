@@ -11,7 +11,7 @@ namespace MiniCalendar.ViewModels
 {
     public class MainViewModel : PropertyChangedBase
     {
-        // TODO: Highlight upcoming appoinments
+        // TODO: Properly run updates on thread and timers
         // TODO: Click to add new appointment or task
         // TODO: Drag text to add
         // TODO: Open items in outlook
@@ -29,6 +29,15 @@ namespace MiniCalendar.ViewModels
             timer.Start();
 
             RefreshData();
+
+            var timerCurrentTime = new Timer(500);
+            timerCurrentTime.Elapsed += (s, e) =>
+            {
+                CurrentTime = DateTime.Now;
+                SnoozeTime = SnoozeTime;
+                NextEvents = new BindableCollection<Event>(Week.AllEvents().Where(wevent => wevent.Start - CurrentTime < TimeSpan.FromMinutes(30) && wevent.Start - CurrentTime > TimeSpan.Zero));
+            };
+            timerCurrentTime.Start();
         }
 
         public bool PauseRefresh { get; set; } = false;
@@ -44,7 +53,62 @@ namespace MiniCalendar.ViewModels
             }
         }
 
-        private Week week = new Week(DateTime.Now, DateTime.Now.AddDays(-1));
+        #region Next Events
+
+        private bool isSnoozing = false;
+        public bool IsSnoozing
+        {
+            get { return isSnoozing; }
+            set
+            {
+                isSnoozing = value;
+                NotifyOfPropertyChange(() => isSnoozing);
+            }
+        }
+
+        private DateTime currentTime = DateTime.MinValue;
+        public DateTime CurrentTime
+        {
+            get { return currentTime; }
+            set
+            {
+                currentTime = value;
+                NotifyOfPropertyChange(() => currentTime);
+            }
+        }
+
+        private DateTime snoozeTime = DateTime.MinValue;
+        public DateTime SnoozeTime
+        {
+            get { return snoozeTime; }
+            set
+            {
+                snoozeTime = value;
+                NotifyOfPropertyChange(() => snoozeTime);
+
+                IsSnoozing = CurrentTime - SnoozeTime < TimeSpan.FromMinutes(5);
+            }
+        }
+
+        private BindableCollection<Event> nextEvents = new BindableCollection<Event>();
+        public BindableCollection<Event> NextEvents
+        {
+            get { return nextEvents; }
+            set
+            {
+                nextEvents = value;
+                NotifyOfPropertyChange(() => nextEvents);
+            }
+        }
+
+        public void Snooze()
+        {
+            SnoozeTime = DateTime.Now;
+        }
+
+        #endregion
+
+        private Week week = new Week();
         public Week Week
         {
             get { return week; }

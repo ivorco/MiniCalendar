@@ -1,7 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <SolidColorBrush x:Key="WindowFontColor" Color="{StaticResource ForegroundColor}" />
-    
+
+    <SolidColorBrush x:Key="HalfTransparentBackgroundBrush" Color="{StaticResource BackgroundColor}" Opacity="0.9" />
+
     <Style TargetType="{x:Type Path}">
         <Setter Property="Fill" Value="{StaticResource ForegroundBrush}"/>
     </Style>
