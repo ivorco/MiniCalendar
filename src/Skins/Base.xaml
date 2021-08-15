@@ -2,7 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <SolidColorBrush x:Key="WindowFontColor" Color="{StaticResource ForegroundColor}" />
 
-    <SolidColorBrush x:Key="HalfTransparentBackgroundBrush" Color="{StaticResource BackgroundColor}" Opacity="0.9" />
+    <SolidColorBrush x:Key="SemiTransparentBackgroundBrush" Color="{StaticResource BackgroundColor}" Opacity="0.9" />
+
+    <SolidColorBrush x:Key="SemiTransparentHighlightBrush" Color="{StaticResource HighlightColor}" Opacity="0.7" />
 
     <Style TargetType="{x:Type Path}">
         <Setter Property="Fill" Value="{StaticResource ForegroundBrush}"/>

@@ -14,7 +14,6 @@ namespace MiniCalendar.ViewModels
         // TODO: Properly run updates on thread and timers
         // TODO: Click to add new appointment or task
         // TODO: Drag text to add
-        // TODO: Open items in outlook
         // TODO: Installer
         // TODO: Dark mode with selector - Remeber dark mode 
         // TODO: Localization - First day of the week, dates, remove Hebrew text, hours

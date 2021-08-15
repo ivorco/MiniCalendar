@@ -80,5 +80,16 @@ namespace MiniCalendar
             else if (eventItem is Outlook.TaskItem task)
                 task.Display(true);
         }
+
+        public static void AddTask(DateTime date, string subject)
+        {
+            var ons = GetOutlookNameSpace();
+            var this10AM = date.Date + TimeSpan.FromHours(10);
+            Outlook.TaskItem item = ons.Session.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderTasks).Items.Add() as Outlook.TaskItem;
+            item.Subject = subject;
+            item.ReminderSet = true;
+            item.ReminderTime = this10AM;
+            item.Display();
+        }
     }
 }

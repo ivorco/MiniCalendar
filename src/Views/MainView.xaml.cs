@@ -77,5 +77,40 @@ namespace MiniCalendar.Views
             ((ViewModels.MainViewModel)DataContext).PauseRefresh = false;
             ((ViewModels.MainViewModel)DataContext).Refresh();
         }
+
+        private void SetDropHighlightVisibility(object sender, Visibility visibility)
+        {
+            var childDropHighlight = ((Panel)sender).Children.OfType<Border>().First(child => child.Name == "DropHighlight");
+            childDropHighlight.Visibility = visibility;
+        }
+
+        private void Day_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.UnicodeText))
+            {
+                SetDropHighlightVisibility(sender, Visibility.Visible);
+                e.Handled = true;
+            }
+        }
+
+        private void Day_DragLeave(object sender, DragEventArgs e)
+        {
+            SetDropHighlightVisibility(sender, Visibility.Hidden);
+            e.Handled = true;
+        }
+
+        private void Day_Drop(object sender, DragEventArgs e)
+        {
+            SetDropHighlightVisibility(sender, Visibility.Hidden);
+
+            if (e.Data.GetDataPresent(DataFormats.UnicodeText))
+            {
+                e.Handled = true;
+
+                var dropDate = ((Data.Day)((Panel)sender)?.DataContext).Date;
+                var dropData = e.Data.GetData(DataFormats.UnicodeText).ToString();
+                OutlookUtils.AddTask(dropDate, dropData);
+            }
+        }
     }
 }

@@ -75,7 +75,7 @@
         </Border>
         <Border BorderThickness="2,0,2,0">
             <Grid Margin="0">
-                <Border Background="{StaticResource HalfTransparentBackgroundBrush}" Opacity="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Panel.ZIndex="1">
+                <Border Background="{StaticResource SemiTransparentBackgroundBrush}" Opacity="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Panel.ZIndex="1">
                     <Border.Style>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="Visibility" Value="Hidden"/>
@@ -119,7 +119,7 @@
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
-                        
+
                         <Button x:Name="Snooze" BorderThickness="1" BorderBrush="{StaticResource ForegroundBrush}" Margin="3,20,3,3" HorizontalAlignment="Center">
                             <TextBlock Margin="2">Snooze</TextBlock>
                         </Button>
@@ -136,82 +136,88 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type data:Day}">
                             <Border BorderThickness="2,4,2,4" x:Name="itemBorder">
-                                <DockPanel LastChildFill="True">
-                                    <DockPanel.Width>
-                                        <MultiBinding Converter="{StaticResource ItemsEqualWidthConverter}">
-                                            <Binding Path="ActualWidth" ElementName="Week"/>
-                                            <Binding Path="Items.Count" ElementName="Week"/>
-                                            <Binding Path="BorderThickness" ElementName="itemBorder"/>
-                                        </MultiBinding>
-                                    </DockPanel.Width>
-
-                                    <!--Current day-->
-                                    <Border DockPanel.Dock="Top" HorizontalAlignment="Stretch" Height="5" Background="{StaticResource HighlightBrush}">
-                                        <Border.Style>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Date, Converter={StaticResource IsTodayConverter}}" Value="True">
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
+                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DragEnter="Day_DragEnter" DragLeave="Day_DragLeave" Drop="Day_Drop" AllowDrop="true">
+                                    <!--Drop highlight-->
+                                    <Border x:Name="DropHighlight" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{StaticResource SemiTransparentHighlightBrush}" Visibility="Hidden" Panel.ZIndex="1">
                                     </Border>
 
-                                    <!--Day header-->
-                                    <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch" LastChildFill="True" Margin="5">
-                                        <Label DockPanel.Dock="Left" Content="{Binding Date.DayOfWeek}" FontWeight="Bold"/>
-                                        <Label DockPanel.Dock="Right" Content="{Binding Date, Converter={StaticResource DateToHebrewDayConverter}}" FontWeight="Bold"/>
-                                        <TextBlock Text="{Binding Date, StringFormat='{}{0:dd/MM}'}" FontWeight="Bold" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" VerticalAlignment="Center">
-                                            <TextBlock.Style>
-                                                <Style TargetType="{x:Type TextBlock}">
+                                    <DockPanel LastChildFill="True">
+                                        <DockPanel.Width>
+                                            <MultiBinding Converter="{StaticResource ItemsEqualWidthConverter}">
+                                                <Binding Path="ActualWidth" ElementName="Week"/>
+                                                <Binding Path="Items.Count" ElementName="Week"/>
+                                                <Binding Path="BorderThickness" ElementName="itemBorder"/>
+                                            </MultiBinding>
+                                        </DockPanel.Width>
+
+                                        <!--Current day-->
+                                        <Border DockPanel.Dock="Top" HorizontalAlignment="Stretch" Height="5" Background="{StaticResource HighlightBrush}">
+                                            <Border.Style>
+                                                <Style TargetType="{x:Type Border}">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+
                                                     <Style.Triggers>
-                                                        <Trigger Property="local:TextBlockService.IsTextTrimmed" Value="True">
-                                                            <Setter Property="Visibility" Value="Hidden"/>
-                                                        </Trigger>
+                                                        <DataTrigger Binding="{Binding Date, Converter={StaticResource IsTodayConverter}}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
-                                    </DockPanel>
+                                            </Border.Style>
+                                        </Border>
 
-                                    <!--Day events-->
-                                    <ListBox ItemsSource="{Binding Events}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False" Background="Transparent" BorderThickness="0">
-                                        <ListBox.ItemTemplate>
-                                            <!--Event-->
-                                            <DataTemplate>
-                                                <Button Click="Event_Click" x:Name="EventText">
-                                                    <Button.Template>
-                                                        <ControlTemplate>
-                                                            <TextBlock TextWrapping="Wrap" Margin="5">
+                                        <!--Day header-->
+                                        <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch" LastChildFill="True" Margin="5">
+                                            <Label DockPanel.Dock="Left" Content="{Binding Date.DayOfWeek}" FontWeight="Bold"/>
+                                            <Label DockPanel.Dock="Right" Content="{Binding Date, Converter={StaticResource DateToHebrewDayConverter}}" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding Date, StringFormat='{}{0:dd/MM}'}" FontWeight="Bold" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" VerticalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Style.Triggers>
+                                                            <Trigger Property="local:TextBlockService.IsTextTrimmed" Value="True">
+                                                                <Setter Property="Visibility" Value="Hidden"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </DockPanel>
+
+                                        <!--Day events-->
+                                        <ListBox ItemsSource="{Binding Events}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False" Background="Transparent" BorderThickness="0">
+                                            <ListBox.ItemTemplate>
+                                                <!--Event-->
+                                                <DataTemplate>
+                                                    <Button Click="Event_Click" x:Name="EventText">
+                                                        <Button.Template>
+                                                            <ControlTemplate>
+                                                                <TextBlock TextWrapping="Wrap" Margin="5">
                                             <Run Text="{Binding Start, StringFormat='{}{0:HH:mm}'}" FontWeight="Bold"/><!-- --><Run Text=" "/><!-- --><Run Text="{Binding Subject}" />
-                                                            </TextBlock>
-                                                        </ControlTemplate>
-                                                    </Button.Template>
-                                                </Button>
+                                                                </TextBlock>
+                                                            </ControlTemplate>
+                                                        </Button.Template>
+                                                    </Button>
 
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding IsRightToLeft}" Value="true">
-                                                        <Setter TargetName="EventText" Property="FlowDirection" Value="RightToLeft"/>
-                                                    </DataTrigger>
+                                                    <DataTemplate.Triggers>
+                                                        <DataTrigger Binding="{Binding IsRightToLeft}" Value="true">
+                                                            <Setter TargetName="EventText" Property="FlowDirection" Value="RightToLeft"/>
+                                                        </DataTrigger>
 
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding Type}" Value="{x:Static data:EventType.Appointment}"/>
-                                                            <Condition Binding="{Binding Start, Converter={StaticResource TimeHasPassedConverter}}" Value="true"/>
-                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding Type}" Value="{x:Static data:EventType.Appointment}"/>
+                                                                <Condition Binding="{Binding Start, Converter={StaticResource TimeHasPassedConverter}}" Value="true"/>
+                                                            </MultiDataTrigger.Conditions>
 
-                                                        <MultiDataTrigger.Setters>
-                                                            <Setter TargetName="EventText" Property="Foreground" Value="{StaticResource DimBrush}"/>
-                                                        </MultiDataTrigger.Setters>
-                                                    </MultiDataTrigger>
-                                                </DataTemplate.Triggers>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                </DockPanel>
+                                                            <MultiDataTrigger.Setters>
+                                                                <Setter TargetName="EventText" Property="Foreground" Value="{StaticResource DimBrush}"/>
+                                                            </MultiDataTrigger.Setters>
+                                                        </MultiDataTrigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </DockPanel>
+                                </Grid>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
