@@ -91,5 +91,18 @@ namespace MiniCalendar
             item.ReminderTime = this10AM;
             item.Display();
         }
+
+        internal static void AddAppointment(DateTime date, string subject)
+        {
+            var ons = GetOutlookNameSpace();
+            var this10AM = date.Date + TimeSpan.FromHours(10);
+            var this12AM = date.Date + TimeSpan.FromHours(12);
+            Outlook.AppointmentItem item = ons.Session.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderCalendar).Items.Add() as Outlook.AppointmentItem;
+            item.Subject = subject;
+            item.ReminderSet = true;
+            item.Start = this10AM;
+            item.End = this12AM;
+            item.Display();
+        }
     }
 }

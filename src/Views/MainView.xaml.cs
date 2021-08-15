@@ -102,14 +102,39 @@ namespace MiniCalendar.Views
         private void Day_Drop(object sender, DragEventArgs e)
         {
             SetDropHighlightVisibility(sender, Visibility.Hidden);
+        }
 
+        private void DaySide_DragEnter(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void DaySide_DragLeave(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void TaskDaySide_Drop(object sender, DragEventArgs e)
+        {
             if (e.Data.GetDataPresent(DataFormats.UnicodeText))
             {
                 e.Handled = true;
 
-                var dropDate = ((Data.Day)((Panel)sender)?.DataContext).Date;
+                var dropDate = ((Data.Day)((Border)sender)?.DataContext).Date;
                 var dropData = e.Data.GetData(DataFormats.UnicodeText).ToString();
                 OutlookUtils.AddTask(dropDate, dropData);
+            }
+        }
+
+        private void AppointmentDaySide_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.UnicodeText))
+            {
+                e.Handled = true;
+
+                var dropDate = ((Data.Day)((Border)sender)?.DataContext).Date;
+                var dropData = e.Data.GetData(DataFormats.UnicodeText).ToString();
+                OutlookUtils.AddAppointment(dropDate, dropData);
             }
         }
     }
