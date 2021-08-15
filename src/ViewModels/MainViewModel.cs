@@ -35,7 +35,10 @@ namespace MiniCalendar.ViewModels
             {
                 CurrentTime = DateTime.Now;
                 SnoozeTime = SnoozeTime;
-                NextEvents = new BindableCollection<Event>(Week.AllEvents().Where(wevent => wevent.Start - CurrentTime < TimeSpan.FromMinutes(30) && wevent.Start - CurrentTime > TimeSpan.Zero));
+
+                var eventsWithin30Minutes = Week.AllEvents().Where(wevent => wevent.Start - CurrentTime < TimeSpan.FromMinutes(30) && wevent.Start - CurrentTime > TimeSpan.Zero);
+                var eventsOrderedByDateAppoitmentFirst = eventsWithin30Minutes.OrderBy(wevent => (wevent.Type == EventType.Appointment ? DateTime.MinValue : wevent.Start));
+                NextEvents = new BindableCollection<Event>(eventsOrderedByDateAppoitmentFirst);
             };
             timerCurrentTime.Start();
         }
