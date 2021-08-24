@@ -12,9 +12,16 @@ namespace MiniCalendar.ViewModels
     public class MainViewModel : PropertyChangedBase
     {
         // TODO: Properly run updates on thread and timers
-        // TODO: Installer
-        // TODO: Dark mode with selector - Remeber dark mode 
+        // TODO: Make nicer task and appt dropping
+        // TODO: Give thanks to: thenounproject, calibrun, TextBlockService
         // TODO: Localization - First day of the week, dates, remove Hebrew text, hours
+        // TODO: Updates
+        // TODO: Installer
+        // TODO: Dark mode with selector - Remember dark mode, fix light mode colors
+        // TODO: להראות מיילים עם דגל בminicalandar
+        // TODO: minical -> focus point
+        // TODO: why recuring appts don't show the exception items
+        // TODO: Exit button
 
         public MainViewModel()
         {
@@ -35,7 +42,12 @@ namespace MiniCalendar.ViewModels
 
                 var eventsWithin30Minutes = Week.AllEvents().Where(wevent => wevent.Start - CurrentTime < TimeSpan.FromMinutes(30) && wevent.Start - CurrentTime > TimeSpan.Zero);
                 var eventsOrderedByDateAppoitmentFirst = eventsWithin30Minutes.OrderBy(wevent => (wevent.Type == EventType.Appointment ? DateTime.MinValue : wevent.Start));
-                NextEvents = new BindableCollection<Event>(eventsOrderedByDateAppoitmentFirst);
+
+                // Only show events if there is an upcoming appointment
+                if (eventsOrderedByDateAppoitmentFirst.Any(eventi => eventi.Type == EventType.Appointment))
+                    NextEvents = new BindableCollection<Event>(eventsOrderedByDateAppoitmentFirst);
+                else
+                    NextEvents = new BindableCollection<Event>();
             };
             timerCurrentTime.Start();
         }
