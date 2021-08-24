@@ -137,5 +137,10 @@ namespace MiniCalendar.Views
                 OutlookUtils.AddAppointment(dropDate, dropData);
             }
         }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

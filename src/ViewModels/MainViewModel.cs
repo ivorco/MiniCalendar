@@ -21,7 +21,6 @@ namespace MiniCalendar.ViewModels
         // TODO: להראות מיילים עם דגל בminicalandar
         // TODO: minical -> focus point
         // TODO: why recuring appts don't show the exception items
-        // TODO: Exit button
 
         public MainViewModel()
         {
