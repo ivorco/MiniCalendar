@@ -116,17 +116,15 @@ namespace MiniCalendar.Views
 
         private void TaskDaySide_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.UnicodeText))
-            {
-                e.Handled = true;
-
-                var dropDate = ((Data.Day)((Border)sender)?.DataContext).Date;
-                var dropData = e.Data.GetData(DataFormats.UnicodeText).ToString();
-                OutlookUtils.AddTask(dropDate, dropData);
-            }
+            DayDropAdd(sender, e, Data.EventType.Task);
         }
 
         private void AppointmentDaySide_Drop(object sender, DragEventArgs e)
+        {
+            DayDropAdd(sender, e, Data.EventType.Appointment);
+        }
+
+        private void DayDropAdd(object sender, DragEventArgs e, Data.EventType eventType)
         {
             if (e.Data.GetDataPresent(DataFormats.UnicodeText))
             {
@@ -134,8 +132,14 @@ namespace MiniCalendar.Views
 
                 var dropDate = ((Data.Day)((Border)sender)?.DataContext).Date;
                 var dropData = e.Data.GetData(DataFormats.UnicodeText).ToString();
-                OutlookUtils.AddAppointment(dropDate, dropData);
+                if (eventType == Data.EventType.Appointment)
+                    OutlookUtils.AddAppointment(dropDate, dropData);
+                else if (eventType == Data.EventType.Task)
+                    OutlookUtils.AddTask(dropDate, dropData);
             }
+
+            // TODO: How to make it nicer (maybe search up the tree of controls for the border)
+            SetDropHighlightVisibility((((sender as Border).Parent as Grid).Parent as Border).Parent, Visibility.Hidden);
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
