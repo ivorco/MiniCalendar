@@ -21,6 +21,8 @@ namespace MiniCalendar.ViewModels
         // TODO: להראות מיילים עם דגל בminicalandar
         // TODO: minical -> focus point
         // TODO: why recuring appts don't show the exception items
+        // TODO: Highlight topdrawer events
+        // TODO: Refresh after item change/add/remove - https://stackoverflow.com/questions/32205255/appointment-item-change-event-of-outlook-called-2-times-in-c-sharp
 
         public MainViewModel()
         {
