@@ -66,13 +66,13 @@ namespace MiniCalendar.Views
                 storyboard.Begin();
         }
 
-        private void Event_Click(object sender, RoutedEventArgs e)
+        private void Item_Click(object sender, RoutedEventArgs e)
         {
             WaitRefereshing();
             ((ViewModels.MainViewModel)DataContext).PauseRefresh = true;
 
-            var eventId = ((Data.Event)((Button)sender).DataContext).ID;
-            OutlookUtils.DisplayEvent(eventId);
+            var itemId = ((Data.Item)((Button)sender).DataContext).ID;
+            OutlookUtils.DisplayItem(itemId);
 
             ((ViewModels.MainViewModel)DataContext).PauseRefresh = false;
             ((ViewModels.MainViewModel)DataContext).Refresh();

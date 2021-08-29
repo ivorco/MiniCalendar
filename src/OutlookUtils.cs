@@ -71,14 +71,16 @@ namespace MiniCalendar
             return outlookTasksItems.OfType<Outlook.TaskItem>().Select(Event.FromOutlook);
         }
 
-        public static void DisplayEvent(string eventId)
+        public static void DisplayItem(string itemId)
         {
             var ons = GetOutlookNameSpace();
-            var eventItem = ons.GetItemFromID(eventId);
-            if (eventItem is Outlook.AppointmentItem appt)
+            var item = ons.GetItemFromID(itemId);
+            if (item is Outlook.AppointmentItem appt)
                 appt.Display(true);
-            else if (eventItem is Outlook.TaskItem task)
+            else if (item is Outlook.TaskItem task)
                 task.Display(true);
+            else if (item is Outlook.MailItem email)
+                email.Display(true);
         }
 
         public static void AddTask(DateTime date, string subject)
@@ -92,7 +94,7 @@ namespace MiniCalendar
             item.Display();
         }
 
-        internal static void AddAppointment(DateTime date, string subject)
+        public static void AddAppointment(DateTime date, string subject)
         {
             var ons = GetOutlookNameSpace();
             var this10AM = date.Date + TimeSpan.FromHours(10);
@@ -103,6 +105,21 @@ namespace MiniCalendar
             item.Start = this10AM;
             item.End = this12AM;
             item.Display();
+        }
+
+        public static IEnumerable<MailItem> GetMailItems(Outlook.NameSpace mapiNamespace, bool flagged)
+        {
+            IEnumerable<Outlook.MAPIFolder> mailFolders;
+            IEnumerable<Outlook.MailItem> outlookMailItems;
+
+            mailFolders = mapiNamespace.Stores.OfType<Outlook.Store>().Select(store => store.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox));
+
+            if (flagged)
+                outlookMailItems = mailFolders.SelectMany(folder => folder.Items.Restrict("[FlagStatus] > 1").OfType<Outlook.MailItem>());
+            else
+                outlookMailItems = mailFolders.SelectMany(folder => folder.Items.OfType<Outlook.MailItem>());
+
+            return outlookMailItems.Select(MailItem.FromOutlook);
         }
     }
 }

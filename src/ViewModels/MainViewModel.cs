@@ -18,7 +18,6 @@ namespace MiniCalendar.ViewModels
         // TODO: Updates
         // TODO: Installer
         // TODO: Dark mode with selector - Remember dark mode, fix light mode colors
-        // TODO: להראות מיילים עם דגל בminicalandar
         // TODO: minical -> focus point
         // TODO: why recuring appts don't show the exception items
         // TODO: Highlight topdrawer events
@@ -36,21 +35,23 @@ namespace MiniCalendar.ViewModels
             RefreshData();
 
             var timerCurrentTime = new Timer(500);
-            timerCurrentTime.Elapsed += (s, e) =>
-            {
-                CurrentTime = DateTime.Now;
-                SnoozeTime = SnoozeTime;
-
-                var eventsWithin30Minutes = Week.AllEvents().Where(wevent => wevent.Start - CurrentTime < TimeSpan.FromMinutes(30) && wevent.Start - CurrentTime > TimeSpan.Zero);
-                var eventsOrderedByDateAppoitmentFirst = eventsWithin30Minutes.OrderBy(wevent => (wevent.Type == EventType.Appointment ? DateTime.MinValue : wevent.Start));
-
-                // Only show events if there is an upcoming appointment
-                if (eventsOrderedByDateAppoitmentFirst.Any(eventi => eventi.Type == EventType.Appointment))
-                    NextEvents = new BindableCollection<Event>(eventsOrderedByDateAppoitmentFirst);
-                else
-                    NextEvents = new BindableCollection<Event>();
-            };
+            timerCurrentTime.Elapsed += (s, e) => RefreshTime();
             timerCurrentTime.Start();
+        }
+
+        private void RefreshTime()
+        {
+            CurrentTime = DateTime.Now;
+            SnoozeTime = SnoozeTime;
+
+            var eventsWithin30Minutes = Week.AllEvents().Where(wevent => wevent.Start - CurrentTime < TimeSpan.FromMinutes(30) && wevent.Start - CurrentTime > TimeSpan.Zero);
+            var eventsOrderedByDateAppoitmentFirst = eventsWithin30Minutes.OrderBy(wevent => (wevent.Type == EventType.Appointment ? DateTime.MinValue : wevent.Start));
+
+            // Only show events if there is an upcoming appointment
+            if (eventsOrderedByDateAppoitmentFirst.Any(eventi => eventi.Type == EventType.Appointment))
+                NextEvents = new BindableCollection<Event>(eventsOrderedByDateAppoitmentFirst);
+            else
+                NextEvents = new BindableCollection<Event>();
         }
 
         public bool PauseRefresh { get; set; } = false;
@@ -132,6 +133,17 @@ namespace MiniCalendar.ViewModels
             }
         }
 
+        private BindableCollection<MailItem> importantEMails = new BindableCollection<MailItem>();
+        public BindableCollection<MailItem> ImportantEMails
+        {
+            get { return importantEMails; }
+            set
+            {
+                importantEMails = value;
+                NotifyOfPropertyChange(() => importantEMails);
+            }
+        }
+
         async public void RefreshData()
         {
             if (!IsRefreshing && !PauseRefresh)
@@ -155,6 +167,13 @@ namespace MiniCalendar.ViewModels
                      var taskItems = OutlookUtils.GetTasksItems(oNamespace, weekStart, weekEnd);
                      Week = new Week(weekStart, weekEnd, apptItems.Concat(taskItems).OrderBy(item => item.Start).ToList());
                  });
+
+                await Task.Run(() =>
+                {
+                    var oNamespace = OutlookUtils.GetOutlookNameSpace();
+                    var flaggedMailItems = OutlookUtils.GetMailItems(oNamespace, true);
+                    ImportantEMails = new BindableCollection<MailItem>(flaggedMailItems.OrderByDescending(item => item.Start));
+                });
 
                 IsRefreshing = false;
             }
