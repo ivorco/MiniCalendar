@@ -11,6 +11,7 @@ namespace MiniCalendar.ViewModels
 {
     public class MainViewModel : PropertyChangedBase
     {
+        // TODO: Show tasks with empty or expired reminders at first or current day
         // TODO: Properly run updates on thread and timers
         // TODO: Make nicer task and appt dropping
         // TODO: Give thanks to: thenounproject, calibrun, TextBlockService

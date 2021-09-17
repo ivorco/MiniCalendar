@@ -76,35 +76,43 @@ namespace MiniCalendar
             var ons = GetOutlookNameSpace();
             var item = ons.GetItemFromID(itemId);
             if (item is Outlook.AppointmentItem appt)
-                appt.Display(true);
+                appt.Display();
             else if (item is Outlook.TaskItem task)
-                task.Display(true);
+                task.Display();
             else if (item is Outlook.MailItem email)
-                email.Display(true);
+                email.Display();
         }
 
         public static void AddTask(DateTime date, string subject)
         {
             var ons = GetOutlookNameSpace();
-            var this10AM = date.Date + TimeSpan.FromHours(10);
+            var startTime = GetStartTimeForDate(date);
             Outlook.TaskItem item = ons.Session.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderTasks).Items.Add() as Outlook.TaskItem;
             item.Subject = subject;
             item.ReminderSet = true;
-            item.ReminderTime = this10AM;
+            item.ReminderTime = startTime;
             item.Display();
         }
 
         public static void AddAppointment(DateTime date, string subject)
         {
             var ons = GetOutlookNameSpace();
-            var this10AM = date.Date + TimeSpan.FromHours(10);
-            var this12AM = date.Date + TimeSpan.FromHours(12);
+            var startTime = GetStartTimeForDate(date);
+            var endTime = startTime + TimeSpan.FromHours(2);
             Outlook.AppointmentItem item = ons.Session.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderCalendar).Items.Add() as Outlook.AppointmentItem;
             item.Subject = subject;
             item.ReminderSet = true;
-            item.Start = this10AM;
-            item.End = this12AM;
+            item.Start = startTime;
+            item.End = endTime;
             item.Display();
+        }
+
+        private static DateTime GetStartTimeForDate(DateTime date)
+        {
+            if (date.Date == DateTime.Today)
+                return date.Date + TimeSpan.FromHours(DateTime.Now.Hour + 1);
+            else
+                return date.Date + TimeSpan.FromHours(10);
         }
 
         public static IEnumerable<MailItem> GetMailItems(Outlook.NameSpace mapiNamespace, bool flagged)

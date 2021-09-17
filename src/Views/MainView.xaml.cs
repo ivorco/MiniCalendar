@@ -68,14 +68,8 @@ namespace MiniCalendar.Views
 
         private void Item_Click(object sender, RoutedEventArgs e)
         {
-            WaitRefereshing();
-            ((ViewModels.MainViewModel)DataContext).PauseRefresh = true;
-
             var itemId = ((Data.Item)((Button)sender).DataContext).ID;
             OutlookUtils.DisplayItem(itemId);
-
-            ((ViewModels.MainViewModel)DataContext).PauseRefresh = false;
-            ((ViewModels.MainViewModel)DataContext).Refresh();
         }
 
         private void SetDropHighlightVisibility(object sender, Visibility visibility)
