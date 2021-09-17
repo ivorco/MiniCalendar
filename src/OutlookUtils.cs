@@ -28,7 +28,7 @@ namespace MiniCalendar
             Outlook.Items outlookCalendarItems;
 
             calendarFolder = mapiNamespace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderCalendar);
-            outlookCalendarItems = calendarFolder.Items.Restrict($"[Start] >= '{start.ToShortDateString()}' AND [End] <= '{end.ToShortDateString()}'");
+            outlookCalendarItems = calendarFolder.Items.Restrict($"[BusyStatus] > 0 AND [Start] >= '{start.ToShortDateString()}' AND [End] <= '{end.ToShortDateString()}'");
             outlookCalendarItems.IncludeRecurrences = true;
 
             foreach (Outlook.AppointmentItem item in outlookCalendarItems)
