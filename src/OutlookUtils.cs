@@ -38,7 +38,7 @@ namespace MiniCalendar
                     Outlook.RecurrencePattern rp = item.GetRecurrencePattern();
                     Outlook.AppointmentItem recur;
 
-                    for (DateTime cur = start; cur <= end; cur = cur.AddDays(1))
+                    for (DateTime cur = start.Date + rp.StartTime.TimeOfDay; cur <= end.Date + rp.StartTime.TimeOfDay; cur = cur.AddDays(1))
                     {
                         recur = null;
 
@@ -46,7 +46,27 @@ namespace MiniCalendar
                         {
                             recur = rp.GetOccurrence(cur);
                         }
-                        catch { }
+                        catch
+                        {
+                            // Didn't find an occurrence, or it was moved/deleted
+                        }
+
+                        if (recur != null)
+                            yield return Event.FromOutlook(recur);
+                    }
+
+                    foreach (var exception in rp.Exceptions.OfType<Outlook.Exception>())
+                    {
+                        recur = null;
+
+                        try
+                        {
+                            recur = exception.AppointmentItem;
+                        }
+                        catch
+                        {
+                            // Exception of recurrence not found
+                        }
 
                         if (recur != null)
                             yield return Event.FromOutlook(recur);
