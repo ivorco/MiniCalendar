@@ -11,6 +11,9 @@ namespace MiniCalendar.ViewModels
 {
     public class MainViewModel : PropertyChangedBase
     {
+        // TODO: When creating a new event, get date, time and categories from text
+        // TODO: When hovering day, show create buttons at the bottom just like when dragging a task
+        // TODO: Right click a task or appointment to covert to other type of event
         // TODO: Show tasks with empty or expired reminders at first or current day
         // TODO: Properly run updates on thread and timers
         // TODO: Make nicer task and appt dropping

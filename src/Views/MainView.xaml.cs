@@ -82,9 +82,16 @@ namespace MiniCalendar.Views
         {
             if (e.Data.GetDataPresent(DataFormats.UnicodeText))
             {
-                SetDropHighlightVisibility(sender, Visibility.Visible);
-                e.Handled = true;
+                var dropDate = ((Data.Day)((Panel)sender)?.DataContext).Date;
+
+                if (dropDate >= DateTime.Today)
+                    SetDropHighlightVisibility(sender, Visibility.Visible);
+                else
+                    // TODO: Show disabled drag effect (should be done with give feedback?)
+                    e.Effects = DragDropEffects.None;
             }
+
+            e.Handled = true;
         }
 
         private void Day_DragLeave(object sender, DragEventArgs e)
@@ -96,6 +103,7 @@ namespace MiniCalendar.Views
         private void Day_Drop(object sender, DragEventArgs e)
         {
             SetDropHighlightVisibility(sender, Visibility.Hidden);
+            e.Handled = true;
         }
 
         private void DaySide_DragEnter(object sender, DragEventArgs e)
@@ -111,29 +119,29 @@ namespace MiniCalendar.Views
         private void TaskDaySide_Drop(object sender, DragEventArgs e)
         {
             DayDropAdd(sender, e, Data.EventType.Task);
+            e.Handled = true;
         }
 
         private void AppointmentDaySide_Drop(object sender, DragEventArgs e)
         {
             DayDropAdd(sender, e, Data.EventType.Appointment);
+            e.Handled = true;
         }
 
         private void DayDropAdd(object sender, DragEventArgs e, Data.EventType eventType)
         {
             if (e.Data.GetDataPresent(DataFormats.UnicodeText))
             {
-                e.Handled = true;
-
                 var dropDate = ((Data.Day)((Border)sender)?.DataContext).Date;
                 var dropData = e.Data.GetData(DataFormats.UnicodeText).ToString();
-                if (eventType == Data.EventType.Appointment)
-                    OutlookUtils.AddAppointment(dropDate, dropData);
-                else if (eventType == Data.EventType.Task)
-                    OutlookUtils.AddTask(dropDate, dropData);
-            }
 
-            // TODO: How to make it nicer (maybe search up the tree of controls for the border)
-            SetDropHighlightVisibility((((sender as Border).Parent as Grid).Parent as Border).Parent, Visibility.Hidden);
+                OutlookUtils.AddEvent(eventType, dropDate, dropData);
+
+                // TODO: How to make it nicer (maybe search up the tree of controls for the border)
+                SetDropHighlightVisibility((((sender as Border).Parent as Grid).Parent as Border).Parent, Visibility.Hidden);
+
+                e.Handled = true;
+            }
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

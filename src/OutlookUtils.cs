@@ -114,6 +114,14 @@ namespace MiniCalendar
             item.Display();
         }
 
+        public static void AddEvent(EventType eventType, DateTime date, string subject)
+        {
+            if (eventType == EventType.Appointment)
+                AddAppointment(date, subject);
+            else if (eventType == EventType.Task)
+                AddTask(date, subject);
+        }
+
         public static void AddAppointment(DateTime date, string subject)
         {
             var ons = GetOutlookNameSpace();
