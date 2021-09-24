@@ -103,10 +103,18 @@ namespace MiniCalendar
                 email.Display();
         }
 
-        public static void AddTask(DateTime date, string subject)
+        public static void AddEvent(EventType eventType, string subject, DateTime date, DateTime? time = null)
+        {
+            if (eventType == EventType.Appointment)
+                AddAppointment(subject, date, time);
+            else if (eventType == EventType.Task)
+                AddTask(subject, date, time);
+        }
+
+        public static void AddTask(string subject, DateTime date, DateTime? time = null)
         {
             var ons = GetOutlookNameSpace();
-            var startTime = GetStartTimeForDate(date);
+            var startTime = GetStartTimeForDate(date, time);
             Outlook.TaskItem item = ons.Session.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderTasks).Items.Add() as Outlook.TaskItem;
             item.Subject = subject;
             item.ReminderSet = true;
@@ -114,18 +122,10 @@ namespace MiniCalendar
             item.Display();
         }
 
-        public static void AddEvent(EventType eventType, DateTime date, string subject)
-        {
-            if (eventType == EventType.Appointment)
-                AddAppointment(date, subject);
-            else if (eventType == EventType.Task)
-                AddTask(date, subject);
-        }
-
-        public static void AddAppointment(DateTime date, string subject)
+        public static void AddAppointment(string subject, DateTime date, DateTime? time = null)
         {
             var ons = GetOutlookNameSpace();
-            var startTime = GetStartTimeForDate(date);
+            var startTime = GetStartTimeForDate(date, time);
             var endTime = startTime + TimeSpan.FromHours(2);
             Outlook.AppointmentItem item = ons.Session.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderCalendar).Items.Add() as Outlook.AppointmentItem;
             item.Subject = subject;
@@ -135,8 +135,10 @@ namespace MiniCalendar
             item.Display();
         }
 
-        private static DateTime GetStartTimeForDate(DateTime date)
+        private static DateTime GetStartTimeForDate(DateTime date, DateTime? time = null)
         {
+            if (time.HasValue)
+                return date.Date + time.Value.TimeOfDay;
             if (date.Date == DateTime.Today)
                 return date.Date + TimeSpan.FromHours(DateTime.Now.Hour + 1);
             else

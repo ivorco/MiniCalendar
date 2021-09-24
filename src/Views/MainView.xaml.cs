@@ -135,7 +135,7 @@ namespace MiniCalendar.Views
                 var dropDate = ((Data.Day)((Border)sender)?.DataContext).Date;
                 var dropData = e.Data.GetData(DataFormats.UnicodeText).ToString();
 
-                OutlookUtils.AddEvent(eventType, dropDate, dropData);
+                OutlookUtils.AddEvent(eventType, dropData, dropDate, Data.Utils.GetTimeFromString(dropData));
 
                 // TODO: How to make it nicer (maybe search up the tree of controls for the border)
                 SetDropHighlightVisibility((((sender as Border).Parent as Grid).Parent as Border).Parent, Visibility.Hidden);
