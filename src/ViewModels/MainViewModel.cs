@@ -12,11 +12,13 @@ namespace MiniCalendar.ViewModels
     public class MainViewModel : PropertyChangedBase
     {
         // Important (usage)
-        // TODO: Refresh after item change/add/remove - https://stackoverflow.com/questions/32205255/appointment-item-change-event-of-outlook-called-2-times-in-c-sharp
         // TODO: Make bottom buttons look better
         // TODO: Style context menu
+        // TODO: Style delete message box
 
         // Nice to have
+        // TODO: Move data.item to the events themselves maybe
+        // TODO: Move outlook utils to item
         // TODO: Hide context menu if empty (all items collapsed)
         // TODO: Right click a task or appointment to covert to other type of event
         // TODO: Show tasks with empty or expired reminders - where?
@@ -30,6 +32,9 @@ namespace MiniCalendar.ViewModels
 
         public MainViewModel()
         {
+            var mapiNamespace = OutlookUtils.GetOutlookNameSpace();
+            OutlookUtils.HandleUpdateEvents(mapiNamespace, RefreshData);
+
             var timer = new Timer(TimeSpan.FromMinutes(5).TotalMilliseconds);
 #if DEBUG
             timer.Interval = TimeSpan.FromSeconds(15).TotalMilliseconds;

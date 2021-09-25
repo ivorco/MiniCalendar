@@ -291,6 +291,7 @@
                                                                             </Style>
                                                                         </MenuItem.Style>
                                                                     </MenuItem>
+                                                                    <MenuItem Header="Delete" Click="DeleteItemMenuItem_Click"/>
                                                                 </ContextMenu>
                                                             </Button.ContextMenu>
 

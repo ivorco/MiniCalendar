@@ -79,6 +79,24 @@ namespace MiniCalendar
             }
         }
 
+        private static Outlook.Items appointments, tasks;
+
+        public static void HandleUpdateEvents(Outlook.NameSpace mapiNamespace, Action action)
+        {
+            var calendarFolder = mapiNamespace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderCalendar);
+            var taskFolder = mapiNamespace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderTasks);
+            appointments = calendarFolder.Items;
+            tasks = taskFolder.Items;
+
+            appointments.ItemAdd += _ => action.Invoke();
+            appointments.ItemChange += _ => action.Invoke();
+            appointments.ItemRemove += () => action.Invoke();
+
+            tasks.ItemAdd += _ => action.Invoke();
+            tasks.ItemChange += _ => action.Invoke();
+            tasks.ItemRemove += () => action.Invoke();
+        }
+
         public static IEnumerable<Event> GetTasksItems(Outlook.NameSpace mapiNamespace, DateTime start, DateTime end)
         {
             Outlook.MAPIFolder tasksFolder;
@@ -158,6 +176,18 @@ namespace MiniCalendar
                 outlookMailItems = mailFolders.SelectMany(folder => folder.Items.OfType<Outlook.MailItem>());
 
             return outlookMailItems.Select(MailItem.FromOutlook);
+        }
+
+        internal static void DeleteItem(string itemId)
+        {
+            var ons = GetOutlookNameSpace();
+            var item = ons.GetItemFromID(itemId);
+            if (item is Outlook.AppointmentItem appt)
+                appt.Delete();
+            else if (item is Outlook.TaskItem task)
+                task.Delete();
+            else if (item is Outlook.MailItem email)
+                email.Delete();
         }
 
         public static void CompleteTask(Item taskItem)

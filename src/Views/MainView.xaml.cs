@@ -166,5 +166,14 @@ namespace MiniCalendar.Views
             var taskItem = ((Data.Item)((MenuItem)sender)?.DataContext);
             OutlookUtils.CompleteTask(taskItem);
         }
+
+        private void DeleteItemMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you would like to delete this item?", "Delete item", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                var item = ((Data.Item)((MenuItem)sender)?.DataContext);
+                OutlookUtils.DeleteItem(item.ID);
+            }
+        }
     }
 }
