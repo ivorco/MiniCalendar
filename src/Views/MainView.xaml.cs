@@ -144,6 +144,18 @@ namespace MiniCalendar.Views
             }
         }
 
+        private void AppointmentButton_Click(object sender, RoutedEventArgs e)
+        {
+            var date = ((Data.Day)((Button)sender)?.DataContext).Date;
+            OutlookUtils.AddAppointment(string.Empty, date);
+        }
+
+        private void TaskButton_Click(object sender, RoutedEventArgs e)
+        {
+            var date = ((Data.Day)((Button)sender)?.DataContext).Date;
+            OutlookUtils.AddTask(string.Empty, date);
+        }
+
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();

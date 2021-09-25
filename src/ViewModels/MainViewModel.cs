@@ -11,20 +11,20 @@ namespace MiniCalendar.ViewModels
 {
     public class MainViewModel : PropertyChangedBase
     {
-        // TODO: When hovering day, show create buttons at the bottom just like when dragging a task
+        // Important (usage)
+        // TODO: Refresh after item change/add/remove - https://stackoverflow.com/questions/32205255/appointment-item-change-event-of-outlook-called-2-times-in-c-sharp
+
+        // Nice to have
+        // TODO: Make bottom buttons look better
         // TODO: Right click a task or appointment to covert to other type of event
-        // TODO: Show tasks with empty or expired reminders at first or current day
+        // TODO: Show tasks with empty or expired reminders - where?
+        // TODO: Dark mode with selector - Remember dark mode, fix light mode colors
         // TODO: Properly run updates on thread and timers
-        // TODO: Make nicer task and appt dropping
         // TODO: Give thanks to: thenounproject, calibrun, TextBlockService
         // TODO: Localization - First day of the week, dates, remove Hebrew text, hours
         // TODO: Updates
         // TODO: Installer
-        // TODO: Dark mode with selector - Remember dark mode, fix light mode colors
         // TODO: minical -> focus point
-        // TODO: why recuring appts don't show the exception items
-        // TODO: Highlight topdrawer events
-        // TODO: Refresh after item change/add/remove - https://stackoverflow.com/questions/32205255/appointment-item-change-event-of-outlook-called-2-times-in-c-sharp
 
         public MainViewModel()
         {

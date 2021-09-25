@@ -10,5 +10,6 @@ namespace MiniCalendar.Data
     {
         public DateTime Date { get; set; }
         public List<Event> Events { get; set; }
+        public bool IsDayFuture { get { return Date.Date >= DateTime.Today; } }
     }
 }

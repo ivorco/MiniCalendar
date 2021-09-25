@@ -9,6 +9,7 @@
                 <!--<ResourceDictionary Source="Skins/Light.xaml"/>-->
                 <ResourceDictionary Source="Skins/Dark.xaml"/>
                 <ResourceDictionary Source="Skins/Base.xaml"/>
+                <ResourceDictionary Source="Skins/Icons.xaml"/>
                 <ResourceDictionary>
                     <vm:MiniCalBootstrapper x:Key="bootstrapper" />
                 </ResourceDictionary>
