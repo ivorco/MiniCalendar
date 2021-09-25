@@ -13,9 +13,11 @@ namespace MiniCalendar.ViewModels
     {
         // Important (usage)
         // TODO: Refresh after item change/add/remove - https://stackoverflow.com/questions/32205255/appointment-item-change-event-of-outlook-called-2-times-in-c-sharp
+        // TODO: Make bottom buttons look better
+        // TODO: Style context menu
 
         // Nice to have
-        // TODO: Make bottom buttons look better
+        // TODO: Hide context menu if empty (all items collapsed)
         // TODO: Right click a task or appointment to covert to other type of event
         // TODO: Show tasks with empty or expired reminders - where?
         // TODO: Dark mode with selector - Remember dark mode, fix light mode colors

@@ -275,7 +275,25 @@
                                                 <ListBox.ItemTemplate>
                                                     <!--Event-->
                                                     <DataTemplate>
-                                                        <Button Click="Item_Click" x:Name="EventText">
+                                                        <Button Click="Item_Click" x:Name="EventText" Background="Transparent">
+                                                            <Button.ContextMenu>
+                                                                <ContextMenu>
+                                                                    <MenuItem Header="Complete" Click="CompleteTaskMenuItem_Click">
+                                                                        <MenuItem.Style>
+                                                                            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding Type}" Value="{x:Static data:EventType.Task}">
+                                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </MenuItem.Style>
+                                                                    </MenuItem>
+                                                                </ContextMenu>
+                                                            </Button.ContextMenu>
+
                                                             <Button.Template>
                                                                 <ControlTemplate>
                                                                     <TextBlock TextWrapping="Wrap" Margin="5">

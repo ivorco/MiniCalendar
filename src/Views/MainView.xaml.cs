@@ -160,5 +160,11 @@ namespace MiniCalendar.Views
         {
             Close();
         }
+
+        private void CompleteTaskMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var taskItem = ((Data.Item)((MenuItem)sender)?.DataContext);
+            OutlookUtils.CompleteTask(taskItem);
+        }
     }
 }

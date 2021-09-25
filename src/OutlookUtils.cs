@@ -159,5 +159,13 @@ namespace MiniCalendar
 
             return outlookMailItems.Select(MailItem.FromOutlook);
         }
+
+        public static void CompleteTask(Item taskItem)
+        {
+            var ons = GetOutlookNameSpace();
+            var item = ons.GetItemFromID(taskItem.ID);
+            if (item is Outlook.TaskItem task)
+                task.MarkComplete();
+        }
     }
 }
