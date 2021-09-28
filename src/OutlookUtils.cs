@@ -35,6 +35,8 @@ namespace MiniCalendar
             {
                 if (item.IsRecurring)
                 {
+                    var entryIDs = new List<string>();
+
                     Outlook.RecurrencePattern rp = item.GetRecurrencePattern();
                     Outlook.AppointmentItem recur;
 
@@ -51,8 +53,11 @@ namespace MiniCalendar
                             // Didn't find an occurrence, or it was moved/deleted
                         }
 
-                        if (recur != null)
+                        if (recur != null && !entryIDs.Contains(recur.EntryID))
+                        {
+                            entryIDs.Add(recur.EntryID);
                             yield return Event.FromOutlook(recur);
+                        }
                     }
 
                     foreach (var exception in rp.Exceptions.OfType<Outlook.Exception>())
@@ -68,8 +73,11 @@ namespace MiniCalendar
                             // Exception of recurrence not found
                         }
 
-                        if (recur != null)
+                        if (recur != null && !entryIDs.Contains(recur.EntryID))
+                        {
+                            entryIDs.Add(recur.EntryID);
                             yield return Event.FromOutlook(recur);
+                        }
                     }
                 }
                 else
