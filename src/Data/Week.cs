@@ -19,14 +19,7 @@ namespace MiniCalendar.Data
             {
                 var day = start.AddDays(d);
 
-                List<Event> dayAppointments;
-
-                if (allEvents == null)
-                    dayAppointments = new List<Event>();
-                else
-                    dayAppointments = allEvents.Where(app => app.Start.Date == day.Date).ToList();
-
-                Add(new Day { Date = day, Events = dayAppointments });
+                Add(new Day { Date = day, Events = allEvents?.Where(app => app.Start.Date == day.Date)?.ToList() ?? new List<Event>() });
             }
         }
 

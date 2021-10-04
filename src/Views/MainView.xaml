@@ -5,12 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MiniCalendar"
         xmlns:data="clr-namespace:MiniCalendar.Data"
-        xmlns:conv="clr-namespace:MiniCalendar.Converters"
+        xmlns:conv="clr-namespace:MiniCalendar.Converters" 
+        xmlns:vm="clr-namespace:MiniCalendar.ViewModels"
+        xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
         mc:Ignorable="d"
         ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" WindowStyle="None"
         Title="MiniCalendar" Height="220" Width="700" MinHeight="150" MinWidth="300" AllowsTransparency="True" 
         MouseDown="Window_MouseDown" KeyDown="Window_KeyDown" FontSize="14" Foreground="{StaticResource WindowFontColor}"
-        Background="{StaticResource BackgroundBrush}" Closing="Window_Closing">
+        Background="{StaticResource BackgroundBrush}" Closing="Window_Closing"
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=True}"
+        cal:Bind.AtDesignTime="True">
     <Window.Resources>
         <conv:ItemsEqualWidthConverter x:Key="ItemsEqualWidthConverter" />
         <conv:DateToHebrewDayConverter x:Key="DateToHebrewDayConverter"/>
@@ -161,7 +165,7 @@
                                             <Button.Template>
                                                 <ControlTemplate>
                                                     <TextBlock TextWrapping="Wrap" Margin="5">
-                                            <Run Text="{Binding Start, StringFormat='{}{0:HH:mm}'}" FontWeight="Bold"/><!-- --><Run Text=" "/><!-- --><Run Text="{Binding Subject}" />
+                                            <Run Text="{Binding Start, StringFormat='{}{0:HH:mm}'}" FontWeight="Bold"/><!-- --><!--<Run Text=" "/>--><!-- --><Run Text="{Binding Subject}" />
                                                     </TextBlock>
                                                 </ControlTemplate>
                                             </Button.Template>
@@ -183,7 +187,7 @@
                     </Border>
 
                     <!--Week-->
-                    <ItemsControl Name="Week" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <ItemsControl Name="Week" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding Week}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel IsItemsHost="True" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />

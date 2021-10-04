@@ -15,8 +15,17 @@ namespace MiniCalendar.ViewModels
         // TODO: Make bottom buttons look better
         // TODO: Style context menu
         // TODO: Style delete message box
+        // TODO: Resizing to narrow doesn't look good
+
+        // The next stage
+        // TODO: minical -> focus point
+        // TODO: Add routine placeholder for food, dog, breakfest and more
+        // TODO: Add sport plugin that finds empty spots before and after eating
+        // TODO: Connect with stove/coffee machine to find out if I ate/drank
 
         // Nice to have
+        // TODO: Allow browsing next week and on
+        // TODO: When hovering a day, adding the buttons at the bottom might create a scrollbar because items are almost filling the whole container, then the scrollbar will be pushing some almost long items, making them drop down one line, further affecting the ui
         // TODO: Move data.item to the events themselves maybe
         // TODO: Move outlook utils to item
         // TODO: Hide context menu if empty (all items collapsed)
@@ -28,10 +37,15 @@ namespace MiniCalendar.ViewModels
         // TODO: Localization - First day of the week, dates, remove Hebrew text, hours
         // TODO: Updates
         // TODO: Installer
-        // TODO: minical -> focus point
 
         public MainViewModel()
         {
+            if (Execute.InDesignMode)
+            {
+                RefreshDataDesignTime();
+                return;
+            }
+
             var mapiNamespace = OutlookUtils.GetOutlookNameSpace();
             OutlookUtils.HandleUpdateEvents(mapiNamespace, RefreshData);
 
@@ -154,7 +168,25 @@ namespace MiniCalendar.ViewModels
             }
         }
 
-        async public void RefreshData()
+        private void RefreshDataDesignTime()
+        {
+            var sunday = new DateTime(2021, 1, 3, 10, 0, 0);
+            var monday = sunday.AddDays(1);
+            var tuesday = sunday.AddDays(2);
+            var wednesday = sunday.AddDays(3);
+            var thursday = sunday.AddDays(4);
+            var friday = sunday.AddDays(5);
+            var saturday = sunday.AddDays(6);
+
+            Week = new Week(sunday, saturday, new List<Event> {
+                new Event { Start = sunday, End = sunday.AddHours(1), Type = EventType.Task, Subject = "Test" },
+                new Event { Start = tuesday, End = tuesday.AddHours(1), Type = EventType.Appointment, Subject = "Test2" },
+                new Event { Start = saturday, End = saturday.AddHours(1), Type = EventType.Appointment, Subject = "Test3" },
+            });
+            ImportantEMails = new BindableCollection<MailItem> { new MailItem { Start = sunday, Subject = "Test4" } };
+        }
+
+        async private void RefreshData()
         {
             if (!IsRefreshing && !PauseRefresh)
             {
