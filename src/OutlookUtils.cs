@@ -28,7 +28,7 @@ namespace MiniCalendar
             Outlook.Items outlookCalendarItems;
 
             calendarFolder = mapiNamespace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderCalendar);
-            outlookCalendarItems = calendarFolder.Items.Restrict($"[BusyStatus] > 0 AND [Start] >= '{start.ToShortDateString()}' AND [End] <= '{end.ToShortDateString()}'");
+            outlookCalendarItems = calendarFolder.Items.Restrict($"[BusyStatus] > 0 AND [Start] >= '{start.ToShortDateString()}' AND [End] < '{end.AddDays(1).ToShortDateString()}'");
             outlookCalendarItems.IncludeRecurrences = true;
 
             foreach (Outlook.AppointmentItem item in outlookCalendarItems)
@@ -111,7 +111,7 @@ namespace MiniCalendar
             Outlook.Items outlookTasksItems;
 
             tasksFolder = mapiNamespace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderTasks);
-            outlookTasksItems = tasksFolder.Items.Restrict($"[ReminderTime] >= '{start.ToShortDateString()}' AND [ReminderTime] <= '{end.ToShortDateString()}' AND [Complete] = False");
+            outlookTasksItems = tasksFolder.Items.Restrict($"[ReminderTime] >= '{start.ToShortDateString()}' AND [ReminderTime] < '{end.AddDays(1).ToShortDateString()}' AND [Complete] = False");
             outlookTasksItems.IncludeRecurrences = true;
 
             return outlookTasksItems.OfType<Outlook.TaskItem>().Select(Event.FromOutlook);

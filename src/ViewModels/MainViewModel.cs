@@ -24,6 +24,7 @@ namespace MiniCalendar.ViewModels
         // TODO: Connect with stove/coffee machine to find out if I ate/drank
 
         // Nice to have
+        // TODO: Don't crash when outlook isn't connected
         // TODO: Allow browsing next week and on
         // TODO: When hovering a day, adding the buttons at the bottom might create a scrollbar because items are almost filling the whole container, then the scrollbar will be pushing some almost long items, making them drop down one line, further affecting the ui
         // TODO: Move data.item to the events themselves maybe
