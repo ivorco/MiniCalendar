@@ -16,6 +16,8 @@ namespace MiniCalendar.ViewModels
         // TODO: Style context menu
         // TODO: Style delete message box
         // TODO: Resizing to narrow doesn't look good
+        // TODO: When displaying an appointment, display the reccurence and not the series
+        // TODO: Weekly navigation: D:\Git\MiniCalendar\CurrentWeek.png
 
         // The next stage
         // TODO: minical -> focus point
