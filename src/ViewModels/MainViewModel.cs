@@ -201,7 +201,7 @@ namespace MiniCalendar.ViewModels
                      DateTime weekStart;
                      DateTime weekEnd;
 
-                     if (DateTime.Now.DayOfWeek == DayOfWeek.Friday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday)
+                     if (DateTime.Now.DayOfWeek >= DayOfWeek.Thursday && DateTime.Now.DayOfWeek <= DayOfWeek.Saturday)
                          weekStart = DayOfWeek.Wednesday.GetThisWeekday();
                      else
                          weekStart = DayOfWeek.Sunday.GetThisWeekday();
