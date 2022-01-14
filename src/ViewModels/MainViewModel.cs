@@ -190,7 +190,7 @@ namespace MiniCalendar.ViewModels
             ImportantEMails = new BindableCollection<MailItem> { new MailItem { Start = sunday, Subject = "Test4" } };
         }
 
-        async private void RefreshData()
+        async public void RefreshData()
         {
             if (!IsRefreshing && !PauseRefresh)
             {

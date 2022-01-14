@@ -20,11 +20,11 @@ namespace MiniCalendar.Data
             return new Event { ID = appointmentItem.EntryID, Type = EventType.Appointment, Subject = subject, Start = appointmentItem.Start, End = appointmentItem.End, IsRightToLeft = IsStringRTL(subject) };
         }
 
-        public static Event FromOutlook(KeyValuePair<Outlook.TaskItem, Outlook.Reminder> taskAndReminder)
+        public static Event FromOutlook(KeyValuePair<Outlook.TaskItem, DateTime> taskAndReminder)
         {
             var subject = taskAndReminder.Key.Subject;
 
-            return new Event { ID = taskAndReminder.Key.EntryID, Type = EventType.Task, Subject = subject, Start = taskAndReminder.Value.NextReminderDate, End = null, IsRightToLeft = IsStringRTL(subject) };
+            return new Event { ID = taskAndReminder.Key.EntryID, Type = EventType.Task, Subject = subject, Start = taskAndReminder.Value, End = null, IsRightToLeft = IsStringRTL(subject) };
         }
     }
 

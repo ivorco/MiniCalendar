@@ -116,16 +116,17 @@ namespace MiniCalendar
             outlookTasksItems = tasksFolder.Items.Restrict($"[ReminderTime] >= '{start.ToShortDateString()}' AND [ReminderTime] < '{end.AddDays(1).ToShortDateString()}' AND [Complete] = False");
             outlookTasksItems.IncludeRecurrences = true;
 
-            var reminders = new List<Outlook.Reminder>();
+            var reminderTimes = new Dictionary<string, DateTime>();
             var appReminders = mapiNamespace.Application.Reminders;
             for (var i = 1; i <= appReminders.Count; i++)
-                reminders.Add(appReminders[i]);
+                if (appReminders[i].Item is Outlook.TaskItem task)
+                    reminderTimes.Add(task.EntryID, appReminders[i].NextReminderDate);
 
             // Add reminder time to each item in a dictionary
             // TODO: Buggy because it has to filter based on the NextReminderDate rather then the original date from the task item
             // TODO: Also do this for appointments
             var tasks = outlookTasksItems.OfType<Outlook.TaskItem>();
-            var tasksAndReminders = tasks.ToDictionary(t => t, t => reminders.FirstOrDefault(r => (r.Item as Outlook.TaskItem)?.EntryID == t.EntryID));            
+            var tasksAndReminders = tasks.ToDictionary(t => t, t => reminderTimes.GetValue(t.EntryID));
 
             return tasksAndReminders.Select(Event.FromOutlook);
         }
