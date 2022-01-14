@@ -8,11 +8,11 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace MiniCalendar.Data
 {
-    public class Event: Item
+    public class Event : Item
     {
         public DateTime? End { get; set; }
         public EventType Type { get; set; }
-        
+
         public static Event FromOutlook(Outlook.AppointmentItem appointmentItem)
         {
             var subject = appointmentItem.Subject;
@@ -20,11 +20,11 @@ namespace MiniCalendar.Data
             return new Event { ID = appointmentItem.EntryID, Type = EventType.Appointment, Subject = subject, Start = appointmentItem.Start, End = appointmentItem.End, IsRightToLeft = IsStringRTL(subject) };
         }
 
-        public static Event FromOutlook(Outlook.TaskItem taskItem)
+        public static Event FromOutlook(KeyValuePair<Outlook.TaskItem, Outlook.Reminder> taskAndReminder)
         {
-            var subject = taskItem.Subject;
+            var subject = taskAndReminder.Key.Subject;
 
-            return new Event { ID = taskItem.EntryID, Type = EventType.Task, Subject = subject, Start = taskItem.ReminderTime, End = null, IsRightToLeft = IsStringRTL(subject) };
+            return new Event { ID = taskAndReminder.Key.EntryID, Type = EventType.Task, Subject = subject, Start = taskAndReminder.Value.NextReminderDate, End = null, IsRightToLeft = IsStringRTL(subject) };
         }
     }
 

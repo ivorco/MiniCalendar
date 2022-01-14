@@ -10,6 +10,7 @@ namespace MiniCalendar
 {
     public static class OutlookUtils
     {
+        private const int NEW_ITEMS_DEFAULT_TIME = 9;
 
         public static Outlook.NameSpace GetOutlookNameSpace()
         {
@@ -17,6 +18,7 @@ namespace MiniCalendar
             Outlook.NameSpace mapiNamespace;
 
             oApp = new Outlook.Application();
+
             mapiNamespace = oApp.GetNamespace("MAPI");
 
             return mapiNamespace;
@@ -114,7 +116,18 @@ namespace MiniCalendar
             outlookTasksItems = tasksFolder.Items.Restrict($"[ReminderTime] >= '{start.ToShortDateString()}' AND [ReminderTime] < '{end.AddDays(1).ToShortDateString()}' AND [Complete] = False");
             outlookTasksItems.IncludeRecurrences = true;
 
-            return outlookTasksItems.OfType<Outlook.TaskItem>().Select(Event.FromOutlook);
+            var reminders = new List<Outlook.Reminder>();
+            var appReminders = mapiNamespace.Application.Reminders;
+            for (var i = 1; i <= appReminders.Count; i++)
+                reminders.Add(appReminders[i]);
+
+            // Add reminder time to each item in a dictionary
+            // TODO: Buggy because it has to filter based on the NextReminderDate rather then the original date from the task item
+            // TODO: Also do this for appointments
+            var tasks = outlookTasksItems.OfType<Outlook.TaskItem>();
+            var tasksAndReminders = tasks.ToDictionary(t => t, t => reminders.FirstOrDefault(r => (r.Item as Outlook.TaskItem)?.EntryID == t.EntryID));            
+
+            return tasksAndReminders.Select(Event.FromOutlook);
         }
 
         public static void DisplayItem(string itemId)
@@ -168,7 +181,7 @@ namespace MiniCalendar
             if (date.Date == DateTime.Today)
                 return date.Date + TimeSpan.FromHours(DateTime.Now.Hour + 1);
             else
-                return date.Date + TimeSpan.FromHours(10);
+                return date.Date + TimeSpan.FromHours(NEW_ITEMS_DEFAULT_TIME);
         }
 
         public static IEnumerable<MailItem> GetMailItems(Outlook.NameSpace mapiNamespace, bool flagged)

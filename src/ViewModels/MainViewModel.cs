@@ -12,6 +12,7 @@ namespace MiniCalendar.ViewModels
     public class MainViewModel : PropertyChangedBase
     {
         // Important (usage)
+        // TODO: Make snooze time the time that is showen in the calendar instead of original reminder (also make for appointments and fix the way tasks are retreived)
         // TODO: Make bottom buttons look better
         // TODO: Style context menu
         // TODO: Style delete message box
