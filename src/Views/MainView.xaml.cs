@@ -68,8 +68,8 @@ namespace MiniCalendar.Views
 
         private void Item_Click(object sender, RoutedEventArgs e)
         {
-            var itemId = ((Data.Item)((Button)sender).DataContext).ID;
-            OutlookUtils.DisplayItem(itemId);
+            if ((sender as Button)?.DataContext is Data.Item item)
+                OutlookUtils.DisplayItem(item.ID);
         }
 
         private void SetDropHighlightVisibility(object sender, Visibility visibility)
@@ -163,16 +163,16 @@ namespace MiniCalendar.Views
 
         private void CompleteTaskMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var taskItem = ((Data.Item)((MenuItem)sender)?.DataContext);
-            OutlookUtils.CompleteTask(taskItem);
+            if ((sender as MenuItem)?.DataContext is Data.Item taskItem)
+                OutlookUtils.CompleteTask(taskItem);
         }
 
         private void DeleteItemMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("Are you sure you would like to delete this item?", "Delete item", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                var item = ((Data.Item)((MenuItem)sender)?.DataContext);
-                OutlookUtils.DeleteItem(item.ID);
+                if ((sender as MenuItem)?.DataContext is Data.Item item)
+                    OutlookUtils.DeleteItem(item.ID);
             }
         }
     }

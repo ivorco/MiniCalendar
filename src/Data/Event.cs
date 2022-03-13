@@ -12,12 +12,13 @@ namespace MiniCalendar.Data
     {
         public DateTime? End { get; set; }
         public EventType Type { get; set; }
+        public bool Busy { get; set; } = true;
 
         public static Event FromOutlook(Outlook.AppointmentItem appointmentItem)
         {
             var subject = appointmentItem.Subject;
 
-            return new Event { ID = appointmentItem.EntryID, Type = EventType.Appointment, Subject = subject, Start = appointmentItem.Start, End = appointmentItem.End, IsRightToLeft = IsStringRTL(subject) };
+            return new Event { ID = appointmentItem.EntryID, Type = EventType.Appointment, Subject = subject, Start = appointmentItem.Start, End = appointmentItem.End, IsRightToLeft = IsStringRTL(subject), Busy = appointmentItem.BusyStatus == Outlook.OlBusyStatus.olBusy };
         }
 
         public static Event FromOutlook(KeyValuePair<Outlook.TaskItem, DateTime> taskAndReminder)

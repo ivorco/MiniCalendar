@@ -119,8 +119,18 @@ namespace MiniCalendar
             var reminderTimes = new Dictionary<string, DateTime>();
             var appReminders = mapiNamespace.Application.Reminders;
             for (var i = 1; i <= appReminders.Count; i++)
-                if (appReminders[i].Item is Outlook.TaskItem task)
-                    reminderTimes.Add(task.EntryID, appReminders[i].NextReminderDate);
+                try
+                {
+                    if (appReminders[i].Item is Outlook.TaskItem task)
+                        if (!reminderTimes.ContainsKey(task.EntryID))
+                            reminderTimes.Add(task.EntryID, appReminders[i].NextReminderDate);
+                }
+                catch
+                {
+                    // Ignore exception for individual reminders
+                }
+
+            appReminders = null;
 
             // Add reminder time to each item in a dictionary
             // TODO: Buggy because it has to filter based on the NextReminderDate rather then the original date from the task item
@@ -202,8 +212,8 @@ namespace MiniCalendar
 
         internal static void DeleteItem(string itemId)
         {
-            var ons = GetOutlookNameSpace();
-            var item = ons.GetItemFromID(itemId);
+
+            var item = GetItemFromID(itemId);
             if (item is Outlook.AppointmentItem appt)
                 appt.Delete();
             else if (item is Outlook.TaskItem task)
@@ -214,10 +224,27 @@ namespace MiniCalendar
 
         public static void CompleteTask(Item taskItem)
         {
-            var ons = GetOutlookNameSpace();
-            var item = ons.GetItemFromID(taskItem.ID);
+            var item = GetItemFromID(taskItem.ID);
             if (item is Outlook.TaskItem task)
                 task.MarkComplete();
+        }
+
+        private static object GetItemFromID(string ID)
+        {
+            try
+            {
+                var ons = GetOutlookNameSpace();
+                var item = ons.GetItemFromID(ID);
+
+                return item;
+            }
+            catch (System.Runtime.InteropServices.COMException ex)
+            {
+                if (ex.Message == "The message you specified cannot be found.")
+                    return null;
+                else
+                    throw;
+            }
         }
     }
 }
