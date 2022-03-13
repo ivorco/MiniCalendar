@@ -1,4 +1,4 @@
-﻿using Caliburn.Micro;
+using Caliburn.Micro;
 using MiniCalendar.Data;
 using System;
 using System.Collections.Generic;
@@ -19,6 +19,7 @@ namespace MiniCalendar.ViewModels
         // TODO: Resizing to narrow doesn't look good
         // TODO: When displaying an appointment, display the reccurence and not the series
         // TODO: Weekly navigation: D:\Git\MiniCalendar\CurrentWeek.png
+        // TODO: Drag and drop items between days (works with snooze for tasks, reschedule for appointments)
 
         // The next stage
         // TODO: minical -> focus point
