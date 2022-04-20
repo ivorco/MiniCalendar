@@ -1,4 +1,4 @@
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using MiniCalendar.Data;
 using System;
 using System.Collections.Generic;
@@ -193,36 +193,43 @@ namespace MiniCalendar.ViewModels
 
         async public void RefreshData()
         {
-            if (!IsRefreshing && !PauseRefresh)
+            try
             {
-                IsRefreshing = true;
-
-                await Task.Run(() =>
-                 {
-                     var oNamespace = OutlookUtils.GetOutlookNameSpace();
-                     DateTime weekStart;
-                     DateTime weekEnd;
-
-                     if (DateTime.Now.DayOfWeek >= DayOfWeek.Thursday && DateTime.Now.DayOfWeek <= DayOfWeek.Saturday)
-                         weekStart = DayOfWeek.Wednesday.GetThisWeekday();
-                     else
-                         weekStart = DayOfWeek.Sunday.GetThisWeekday();
-
-                     weekEnd = weekStart.AddDays(6);
-
-                     var apptItems = OutlookUtils.GetCalendarItems(oNamespace, weekStart, weekEnd);
-                     var taskItems = OutlookUtils.GetTasksItems(oNamespace, weekStart, weekEnd);
-                     Week = new Week(weekStart, weekEnd, apptItems.Concat(taskItems).OrderBy(item => item.Start).ToList());
-                 });
-
-                await Task.Run(() =>
+                if (!IsRefreshing && !PauseRefresh)
                 {
-                    var oNamespace = OutlookUtils.GetOutlookNameSpace();
-                    var flaggedMailItems = OutlookUtils.GetMailItems(oNamespace, true);
-                    ImportantEMails = new BindableCollection<MailItem>(flaggedMailItems.OrderByDescending(item => item.Start));
-                });
+                    IsRefreshing = true;
 
-                IsRefreshing = false;
+                    await Task.Run(() =>
+                     {
+                         var oNamespace = OutlookUtils.GetOutlookNameSpace();
+                         DateTime weekStart;
+                         DateTime weekEnd;
+
+                         if (DateTime.Now.DayOfWeek >= DayOfWeek.Thursday && DateTime.Now.DayOfWeek <= DayOfWeek.Saturday)
+                             weekStart = DayOfWeek.Wednesday.GetThisWeekday();
+                         else
+                             weekStart = DayOfWeek.Sunday.GetThisWeekday();
+
+                         weekEnd = weekStart.AddDays(6);
+
+                         var apptItems = OutlookUtils.GetCalendarItems(oNamespace, weekStart, weekEnd);
+                         var taskItems = OutlookUtils.GetTasksItems(oNamespace, weekStart, weekEnd);
+                         Week = new Week(weekStart, weekEnd, apptItems.Concat(taskItems).OrderBy(item => item.Start).ToList());
+                     });
+
+                    await Task.Run(() =>
+                    {
+                        var oNamespace = OutlookUtils.GetOutlookNameSpace();
+                        var flaggedMailItems = OutlookUtils.GetMailItems(oNamespace, true);
+                        ImportantEMails = new BindableCollection<MailItem>(flaggedMailItems.OrderByDescending(item => item.Start));
+                    });
+
+                    IsRefreshing = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.IO.File.AppendAllText(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "MiniCalLog.txt"), Environment.NewLine + ex.ToString() + Environment.NewLine);
             }
         }
     }

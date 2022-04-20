@@ -13,5 +13,9 @@ namespace MiniCalendar
     /// </summary>
     public partial class App : Application
     {
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            System.IO.File.AppendAllText(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "MiniCalLog.txt"), Environment.NewLine + e.Exception.ToString() + Environment.NewLine);
+        }
     }
 }
